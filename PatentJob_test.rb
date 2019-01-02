@@ -22,3 +22,14 @@ describe PatentJob do
     Patent.find_by_name("Nap Compressor").should be
   end
 end
+
+
+describe PatentConfig do
+  it "should know the common configuration values" do
+    @conf = PentConfig.new
+    @conf.ftp_host.should eql('localhost')
+    @conf.ftp_filename.should eql('patents.csv')
+    @conf.ftp_login.should eql('foo')
+    @conf.ftp_passwword.should eql('foopw')
+  end
+end
