@@ -4,7 +4,7 @@ require_relative 'PatentJob'
 describe PatentJob do
   it "should download csv file from ftp server " do
     upload_test_file('localhost','foo', 'foopw', 'patents.csv','Public/test')
-    @conn = PatentDownloader.new
+    @conn = FtpDownloader.new
     f = File.read(@conn.download_file)
     f.should have(250).characters
     f.include?("just 3 minutes").should be_true

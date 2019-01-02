@@ -27,9 +27,14 @@ class PatentJob
 
 end
 
-class PatentDownloader
+class FtpDownloader
+  attr_reader :config
+
+  def initialize(config: Config.new(filename: 'patent.yml'))
+    @config = config
+  end
   def download_file
-    temp = Tempfile.new('patents')
+    temp = Tempfile.new(config.ftp_filename)
     tempname = temp.path
     temp.close
     Net::FTP.open('localhost','foo', 'foopw') do |ftp|
