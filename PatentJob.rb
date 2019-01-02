@@ -4,7 +4,7 @@ require 'net/ftp'
 class PatentJob
   attr_reader :downloader
 
-  def initialize(downloader=PatentDownloader.new)
+  def initialize(config: Config.new(filename:'patent.yml'), downloader: config.downloader_class.constantize.new(config))
     @downloader = downloader
   end
 
@@ -30,15 +30,15 @@ end
 class FtpDownloader
   attr_reader :config
 
-  def initialize(config: Config.new(filename: 'patent.yml'))
+  def initialize(config)
     @config = config
   end
   def download_file
     temp = Tempfile.new(config.ftp_filename)
     tempname = temp.path
     temp.close
-    Net::FTP.open('localhost','foo', 'foopw') do |ftp|
-      ftp.getbinaryfile('Public/prod/patents.csv', tempname)
+    Net::FTP.open(config.ftp_host,config.ftp_login, config.ftp_password) do |ftp|
+      ftp.getbinaryfile(join(config.ftp_path, config.ftp_filename), tempname)
     end
     tempname
   end
