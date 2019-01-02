@@ -1,5 +1,5 @@
-require 'minitest/autorun';
-require_relative 'PatentJob';
+require 'minitest/autorun'
+require_relative 'PatentJob'
 
 describe PatentJob do
   it "should download csv file from ftp server " do
@@ -33,3 +33,15 @@ describe PatentConfig do
     @conf.ftp_passwword.should eql('foopw')
   end
 end
+
+describe "should know the correct path for" do
+  it "production" do
+    @conf = PatentConfig.new('production')
+    @conf.ftp_path.should eql('Public/prod')
+  end
+  it "test" do
+    @conf = PatentConfig.new('test')
+    @conf.ftp_path.should eql('Public/test')
+  end
+end
+
