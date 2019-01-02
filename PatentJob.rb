@@ -38,3 +38,20 @@ class PatentDownloader
     tempname
   end
 end
+
+
+class PatentConfig
+  attr_reader :env
+
+  def initialize(env: Rails.env)
+    @env = env
+  end
+
+  def ftp_host
+    'localhost'
+  end
+  
+  def ftp_path
+    "Public/" + (env == 'production' ? 'prod' : 'test')
+  end
+end
