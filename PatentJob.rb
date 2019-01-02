@@ -39,19 +39,24 @@ class PatentDownloader
   end
 end
 
-
-class PatentConfig
-  attr_reader :env
-
-  def initialize(env: Rails.env)
-    @env = env
+class Config
+  attr_reader :data, :env
+  def self.config_path
+    File.join('config', 'external_resources')
   end
 
-  def ftp_host
-    'localhost'
+  def initialize(env: Rails.env, filename:)
+    @data = YAML::load_file(File.join(self.class.config_path, filename))
+    define_methods_for_environmment(data[env].keys)
   end
-  
-  def ftp_path
-    "Public/" + (env == 'production' ? 'prod' : 'test')
+
+  def define_methods_for_environment(names)
+    names.each do |name|
+      class_eval <<-EOS
+          def #{name}       #def ftp_host
+            data[env]['#{name}']    #data[env]['ftp_host']
+          end               # end  
+        EOS
+    end
   end
 end
